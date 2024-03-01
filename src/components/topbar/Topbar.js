@@ -6,10 +6,18 @@ import useCrtStore from "src/stores/useCrtStore.js";
 
 const Topbar = () => {
   const topbarText = useCrtStore((s) => s.topbarText);
-  const ipcData = useCrtStore((s) => s.ipcData);
+  const authStatus = useCrtStore((s) => s.authStatus);
 
   const openNewWindow = () => {
     window.crtApi.openNewWindow();
+  };
+
+  const login = () => {
+    window.crtApi.openLoginWindow();
+  };
+
+  const logout = () => {
+    window.crtApi.logout();
   };
 
   return (
@@ -19,7 +27,19 @@ const Topbar = () => {
         <IconButton onClick={openNewWindow}>
           <LibraryAddIcon />
         </IconButton>
-        <Typography>{ipcData.toString()}</Typography>
+        <div style={{ flexGrow: 1 }}></div>
+        {authStatus != "User Logged In" && (
+          <Button variant="contained" onClick={login}>
+            Login
+          </Button>
+        )}
+
+        {authStatus == "User Logged In" && (
+          <Button variant="contained" onClick={logout}>
+            Logout
+          </Button>
+        )}
+        <Typography>{authStatus.toString()}</Typography>
       </Toolbar>
     </AppBar>
   );

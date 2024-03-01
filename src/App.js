@@ -15,10 +15,24 @@ import "tabulator-tables/dist/css/tabulator_midnight.min.css";
 import "./app.css";
 
 const App = () => {
-  const setIpcData = useCrtStore((s) => s.setIpcData);
+  const setAuthStatus = useCrtStore((s) => s.setAuthStatus);
 
-  window.crtApi.onMainToRenderer((valueFromMain) => {
-    setIpcData(valueFromMain);
+  const grabMainAuth = async () => {
+    let mainThreadAuth = await window.crtApi.getAuthStatus();
+    setAuthStatus(mainThreadAuth);
+  };
+
+  React.useEffect(() => {
+    grabMainAuth();
+  }, []);
+
+  // respond when the main thread tells us the user just logged in by asking the main thread about who is logged in
+  window.crtApi.onLogin(() => {
+    grabMainAuth();
+  });
+
+  window.crtApi.onLogout(() => {
+    grabMainAuth();
   });
 
   return (
