@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-  entry: "./wrapper/electron-main.js",
+  entry: "./wrapper/main.js",
   module: {
     rules: [
       {

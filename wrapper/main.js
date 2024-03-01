@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain, Menu, dialog } = require("electron");
 const { handleFileSelected } = require("handlers/handleFileSelected.js");
 const { handleRightClick } = require("handlers/handleRightClick.js");
-const { openCrtWindow } = require("wrapper/openCrtWindow.js");
+const { spawnWindow } = require("wrapper/spawnWindow.js");
 
 if (require("electron-squirrel-startup")) app.quit();
 
@@ -15,10 +15,10 @@ app.whenReady().then(() => {
   ipcMain.handle("dialog:openFile", handleFileSelected);
   ipcMain.on("crt-right-click", handleRightClick);
   ipcMain.on("openNewWindow", () => {
-    openCrtWindow();
+    spawnWindow();
   });
 
-  openCrtWindow();
+  spawnWindow().maximize();
 });
 
 app.on("window-all-closed", () => {
@@ -29,6 +29,6 @@ app.on("window-all-closed", () => {
 
 app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
-    openCrtWindow();
+    spawnWindow();
   }
 });

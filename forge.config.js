@@ -23,7 +23,10 @@ module.exports = {
           client: {
             overlay: {
               runtimeErrors: (error) => {
-                if (error?.message === "ResizeObserver loop completed with undelivered notifications.") {
+                if (
+                  error?.message ===
+                  "ResizeObserver loop completed with undelivered notifications."
+                ) {
                   console.error(error);
                   return false;
                 }

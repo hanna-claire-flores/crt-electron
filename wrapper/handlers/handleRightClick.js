@@ -12,8 +12,8 @@ const handleRightClick = (event) => {
     { label: "Menu Item 2", type: "checkbox", checked: true },
   ]);
   menu.popup({ window: BrowserWindow.fromWebContents(event.sender) });
-}
+};
 
 module.exports = {
-  handleRightClick: handleRightClick
-}
+  handleRightClick: handleRightClick,
+};

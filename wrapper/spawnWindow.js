@@ -1,16 +1,20 @@
 const { BrowserWindow } = require("electron");
 
-const openCrtWindow2 = () => {
-  const mainWindow = new BrowserWindow({
+const spawnWindow = () => {
+  const w = new BrowserWindow({
+    width: 1900,
+    height: 1000,
     backgroundColor: "#303030",
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
   });
 
-  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  w.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+
+  return w;
 };
 
 module.exports = {
-  openCrtWindow: openCrtWindow2,
+  spawnWindow: spawnWindow,
 };
