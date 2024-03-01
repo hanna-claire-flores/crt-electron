@@ -3,6 +3,7 @@ import CrtTable from "components/crtTable/CrtTable.js";
 import React from "react";
 import useColumns from "src/features/aor/hooks/useColumns.js";
 import useRows from "src/features/aor/hooks/useRows.js";
+import useRegions from "src/hooks/useRegions";
 
 const Aor = () => {
   const sendMessage = () => {
@@ -10,17 +11,12 @@ const Aor = () => {
   };
 
   const tabulatorRef = React.useRef(null);
+  const {data: regionsData} = useRegions();
 
-  const { data: colQueryData } = useColumns();
-  const { data: rowQueryData } = useRows();
-
-  React.useEffect(() => {
-    if (colQueryData?.columnDefinitions) tabulatorRef.current.setColumns(colQueryData.columnDefinitions);
-  }, [colQueryData]);
 
   React.useEffect(() => {
-    if (rowQueryData?.results) tabulatorRef.current.replaceData(rowQueryData.results);
-  }, [rowQueryData]);
+    if (regionsData?.results) tabulatorRef.current.replaceData(regionsData.results);
+  }, [regionsData]);
 
   return (
     <div style={{ flexGrow: 1, minHeight: 0, display: "flex", flexDirection: "column" }}>
@@ -29,7 +25,7 @@ const Aor = () => {
         <CrtTable
           ref={tabulatorRef}
           options={{
-            columns: [],
+            columns: [{title: "Name", field:"name"}],
             data: [],
             layout: "fitColumns",
             height: "100%",

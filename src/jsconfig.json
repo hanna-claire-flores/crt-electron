@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "nodenext",
+    "module": "NodeNext",
+    "baseUrl": ".",
+    "paths": {
+      "assets/*": ["./assets/*"],
+      "components/*": ["./components/*"],
+      "constants/*": ["./constants/*"],
+      "features/*": ["./assets/*"],
+      "src/*": ["./*"],
+      "utils/*": ["./utils/*"]
+    }
+  },
+  "exclude": ["node_modules", "coverage", "out", "dist", "public", "nginx", ".vscode"]
+}

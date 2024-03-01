@@ -1,3 +1,5 @@
+const path = require("path");
+
 module.exports = {
   entry: "./wrapper/electron-main.js",
   module: {
@@ -17,5 +19,12 @@ module.exports = {
         },
       },
     ],
+  },
+  resolve: {
+    extensions: ["*", ".js"],
+    alias: {
+      handlers: path.join(__dirname, "./wrapper/handlers"),
+      wrapper: path.join(__dirname, "./wrapper"),
+    },
   },
 };

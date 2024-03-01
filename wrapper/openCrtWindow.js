@@ -1,6 +1,6 @@
 const { BrowserWindow } = require("electron");
 
-const openCrtWindow = () => {
+const openCrtWindow2 = () => {
   const mainWindow = new BrowserWindow({
     backgroundColor: "#303030",
     webPreferences: {
@@ -9,10 +9,8 @@ const openCrtWindow = () => {
   });
 
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-
-  return mainWindow;
 };
 
 module.exports = {
-  openCrtWindow: openCrtWindow,
+  openCrtWindow: openCrtWindow2,
 };

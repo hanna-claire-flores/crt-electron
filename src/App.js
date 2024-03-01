@@ -8,8 +8,9 @@ import { QueryClient, QueryClientProvider, QueryCache, MutationCache } from "rea
 import "react-toastify/dist/ReactToastify.css";
 
 import pusheen from "assets/images/pusheen.jpg";
-import Theme from "./Theme.js";
-import crtMemoryRouter from "./routes/crtMemoryRouter.js";
+// import Theme from "./Theme.js";
+import Theme from "src/Theme.js";
+import crtMemoryRouter from "src/routes/crtMemoryRouter.js";
 
 import "tabulator-tables/dist/css/tabulator_midnight.min.css";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { createMemoryRouter } from "react-router-dom";
-import { apps } from "./crtApps.js";
-import CrtWrapper from "../CrtWrapper.js";
+import { apps } from "src/routes/crtApps.js";
+import CrtWrapper from "src/CrtWrapper.js";
 import Aor from "src/features/aor/Aor.js";
 
 const crtMemoryRouter = createMemoryRouter([
