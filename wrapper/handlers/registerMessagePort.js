@@ -6,6 +6,4 @@ const registerMessagePort = (e) => {
   });
 };
 
-module.exports = {
-  registerMessagePort: registerMessagePort,
-};
+export default registerMessagePort;

@@ -3,7 +3,7 @@
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "nodenext",
     "module": "NodeNext",
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
       "assets/*": ["./assets/*"],
       "components/*": ["./components/*"],

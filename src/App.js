@@ -5,13 +5,12 @@ import { ToastContainer } from "react-toastify";
 import { RouterProvider } from "react-router-dom";
 import { QueryClientProvider } from "react-query";
 
-import "react-toastify/dist/ReactToastify.css";
-
 import Theme from "src/Theme.js";
 import crtMemoryRouter from "src/routes/crtMemoryRouter.js";
 import CrtQueryClient from "src/utils/CrtQueryClient.js";
 import useCrtStore from "src/stores/useCrtStore.js";
 
+import "react-toastify/dist/ReactToastify.css";
 import "tabulator-tables/dist/css/tabulator_midnight.min.css";
 import "./app.css";
 

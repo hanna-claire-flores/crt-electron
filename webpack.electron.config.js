@@ -20,11 +20,4 @@ module.exports = {
       },
     ],
   },
-  resolve: {
-    extensions: ["*", ".js"],
-    alias: {
-      handlers: path.join(__dirname, "./wrapper/handlers"),
-      wrapper: path.join(__dirname, "./wrapper"),
-    },
-  },
 };

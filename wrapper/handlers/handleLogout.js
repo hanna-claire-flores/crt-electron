@@ -1,4 +1,4 @@
-const { BrowserWindow } = require("electron");
+import { BrowserWindow } from "electron";
 
 const handleLogout = () => {
   BrowserWindow.getAllWindows().forEach((window) => {
@@ -6,6 +6,4 @@ const handleLogout = () => {
   });
 };
 
-module.exports = {
-  handleLogout: handleLogout,
-};
+export default handleLogout;

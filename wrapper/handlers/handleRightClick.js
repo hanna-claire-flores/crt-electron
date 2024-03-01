@@ -1,4 +1,4 @@
-const { Menu, BrowserWindow } = require("electron");
+import { Menu, BrowserWindow } from "electron";
 
 const handleRightClick = (event) => {
   const menu = Menu.buildFromTemplate([
@@ -14,6 +14,4 @@ const handleRightClick = (event) => {
   menu.popup({ window: BrowserWindow.fromWebContents(event.sender) });
 };
 
-module.exports = {
-  handleRightClick: handleRightClick,
-};
+export default handleRightClick;

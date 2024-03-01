@@ -1,13 +1,8 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": false,
+    "allowSyntheticDefaultImports": true,
     "module": "CommonJS",
     "target": "ESNext",
-    "baseUrl": ".",
-    "paths": {
-      "handlers/*": ["./handlers/*"],
-      "wrapper/*": ["./*"],
-    }
   },
   "exclude": ["node_modules", "coverage", "out", "dist", "public", "nginx", ".vscode"]
 }

@@ -1,8 +1,8 @@
-const { app, BrowserWindow, ipcMain, Menu, dialog } = require("electron");
-const { handleFileSelected } = require("handlers/handleFileSelected.js");
-const { handleLogout } = require("handlers/handleLogout.js");
-const { handleRightClick } = require("handlers/handleRightClick.js");
-const { spawnWindow } = require("wrapper/spawnWindow.js");
+import { app, BrowserWindow, ipcMain, Menu, dialog } from "electron";
+import spawnWindow from "./spawnWindow.js";
+import handleRightClick from "./handlers/handleRightClick.js";
+import handleFileSelected from "./handlers/handleFileSelected.js";
+import handleLogout from "./handlers/handleLogout.js";
 
 if (require("electron-squirrel-startup")) app.quit();
 

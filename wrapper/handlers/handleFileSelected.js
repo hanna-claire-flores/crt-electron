@@ -1,10 +1,8 @@
-const { dialog } = require("electron");
+import { dialog } from "electron";
 
 const handleFileSelected = async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog({});
   if (!canceled) return filePaths[0];
 };
 
-module.exports = {
-  handleFileSelected: handleFileSelected,
-};
+export default handleFileSelected;

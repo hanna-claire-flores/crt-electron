@@ -1,4 +1,4 @@
-const { BrowserWindow } = require("electron");
+import { BrowserWindow } from "electron";
 
 const spawnWindow = () => {
   const w = new BrowserWindow({
@@ -15,6 +15,4 @@ const spawnWindow = () => {
   return w;
 };
 
-module.exports = {
-  spawnWindow: spawnWindow,
-};
+export default spawnWindow;
