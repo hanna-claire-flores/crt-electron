@@ -52,6 +52,7 @@ module.exports = {
       assets: path.join(__dirname, "./src/assets"),
       components: path.join(__dirname, "./src/components"),
       features: path.join(__dirname, "./src/features"),
+      utils: path.join(__dirname, "./src/utils"),
       src: path.join(__dirname, "./src"),
     },
   },

@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 
 const actualApiCall = async (param1) => {
-  return await axios.get("https://pokeapi.co/api/v2/region?limit=2000").then((res) => res.data);
+  return await axios.get("/api/v2/region?limit=2000").then((res) => res.data);
 };
 
 export default function useRegions() {

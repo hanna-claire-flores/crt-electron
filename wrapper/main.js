@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain, Menu, dialog } = require("electron");
 const { handleFileSelected } = require("handlers/handleFileSelected.js");
+const { handleLogout } = require("handlers/handleLogout.js");
 const { handleRightClick } = require("handlers/handleRightClick.js");
 const { spawnWindow } = require("wrapper/spawnWindow.js");
 
@@ -12,23 +13,20 @@ app.whenReady().then(() => {
     });
   });
 
-  ipcMain.handle("dialog:openFile", handleFileSelected);
+  ipcMain.on("openLoginWindow", () => {});
+  ipcMain.on("logout", handleLogout);
+
+  ipcMain.handle("openFile", handleFileSelected);
   ipcMain.on("crt-right-click", handleRightClick);
-  ipcMain.on("openNewWindow", () => {
-    spawnWindow();
-  });
+  ipcMain.on("openNewWindow", spawnWindow);
 
   spawnWindow().maximize();
 });
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
+  if (process.platform !== "darwin") app.quit();
 });
 
 app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    spawnWindow();
-  }
+  if (BrowserWindow.getAllWindows().length === 0) spawnWindow();
 });
