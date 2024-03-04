@@ -4,6 +4,7 @@ import handleRightClick from "./handlers/handleRightClick.js";
 import handleFileSelected from "./handlers/handleFileSelected.js";
 import handleLogout from "./auth/handleLogout.js";
 import showLoginDialog from "./auth/showLoginDialog.js";
+import handleLogin from "./auth/handleLogin.js";
 
 if (require("electron-squirrel-startup")) app.quit();
 
@@ -16,15 +17,7 @@ app.whenReady().then(() => {
     });
   });
 
-  ipcMain.on("openLoginWindow", () => {
-    showLoginDialog((response) => {
-      authStatus = response;
-    });
-
-    BrowserWindow.getAllWindows().forEach((window) => {
-      window.webContents.send("loginComplete");
-    });
-  });
+  ipcMain.on("openLoginWindow", handleLogin);
 
   ipcMain.on("logout", () => {
     authStatus = "Unauthenticated";
