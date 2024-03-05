@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "@material-ui/core";
+import useUserInfo from "src/features/import/hooks/useUserInfo.js";
 // import Plotly from "plotly.js-dist";
 
 // const renderPlot = async (pRef, dRef, data) => {
@@ -8,6 +9,12 @@ import { Button } from "@material-ui/core";
 
 const Import = () => {
   const [selFile, setSelFile] = React.useState("nothin");
+
+  const userInfo = useUserInfo();
+
+  React.useEffect(() => {
+    console.log(userInfo);
+  }, [userInfo]);
 
   const waitForFile = async () => {
     const filePath = await window.crtApi.openFile();

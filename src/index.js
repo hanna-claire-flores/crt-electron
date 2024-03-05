@@ -5,7 +5,8 @@ import axios from "axios";
 import App from "src/App.js";
 
 // Use whatever api server the electron wrapper says we should use
-axios.defaults.baseURL = window.crtApi.baseURL;
+// axios.defaults.baseURL = window.crtApi.baseURL;
+// axios.defaults.withCredentials = true;
 
 const container = document.getElementById("root");
 const root = createRoot(container);

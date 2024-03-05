@@ -3,8 +3,13 @@ import { createMemoryRouter } from "react-router-dom";
 import { apps } from "src/routes/crtApps.js";
 import CrtWrapper from "src/CrtWrapper.js";
 import Aor from "src/features/aor/Aor.js";
+// import LoginPage from "src/auth/LoginPage.js";
 
 const crtMemoryRouter = createMemoryRouter([
+  // {
+  //   path: "/login",
+  //   element: <LoginPage />,
+  // },
   {
     path: "/",
     element: <CrtWrapper />,

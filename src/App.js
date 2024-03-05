@@ -2,8 +2,9 @@ import React from "react";
 import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core";
 import { ToastContainer } from "react-toastify";
-import { RouterProvider } from "react-router-dom";
+import { RouterProvider, useNavigate } from "react-router-dom";
 import { QueryClientProvider } from "react-query";
+import axios from "axios";
 
 import Theme from "src/Theme.js";
 import crtMemoryRouter from "src/routes/crtMemoryRouter.js";
@@ -17,22 +18,25 @@ import "./app.css";
 const App = () => {
   const setAuthStatus = useCrtStore((s) => s.setAuthStatus);
 
-  const grabMainAuth = async () => {
-    let mainThreadAuth = await window.crtApi.getAuthStatus();
-    setAuthStatus(mainThreadAuth);
+  const getTokenFromMainProcess = async () => {
+    let token = await window.crtApi.getAuthStatus();
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    setAuthStatus(token);
   };
 
   React.useEffect(() => {
-    grabMainAuth();
+    axios.defaults.baseURL = window.crtApi.baseURL;
+    getTokenFromMainProcess();
   }, []);
 
-  // respond when the main thread tells us the user just logged in by asking the main thread about who is logged in
   window.crtApi.onLogin(() => {
-    grabMainAuth();
+    getTokenFromMainProcess();
+    // refetch all our api data probably
   });
 
   window.crtApi.onLogout(() => {
-    grabMainAuth();
+    delete axios.defaults.headers.common["Authorization"];
+    setAuthStatus(null);
   });
 
   return (

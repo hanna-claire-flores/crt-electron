@@ -1,70 +1,67 @@
+import { setToken } from "../dummyState.js";
 const { BrowserWindow } = require("electron");
 var http = require("http");
-var fs = require("fs");
-const util = require("util");
+import axios from "axios";
+
+const tinyPort = 3456;
+const keycloakServer = "https://sso-keycloak.apps.ocp-ugw1-dev.ecs.us.lmco.com/realms/myrealm/protocol/openid-connect";
+const clientId = "crt-electron";
+
+const authURL = new URL(keycloakServer + "/auth");
+authURL.searchParams.append("scope", "openid");
+authURL.searchParams.append("response_type", "code");
+authURL.searchParams.append("client_id", clientId);
+authURL.searchParams.append("redirect_uri", `http://localhost:${tinyPort}`);
+
+const authHref = authURL.href;
 
 const handleLogin = () => {
-  let tinyServer = http.createServer((request, response) => {
-    response.writeHead(200, { "Content-Type": "application/json" });
-    response.end(
-      JSON.stringify({
-        data: "You are logged in!",
-      })
-    );
-  });
+  let authWindow = new BrowserWindow();
 
-  tinyServer.listen(3456);
+  /**
+   * This web server only lives while the login popup window is shown - it's here
+   * to catch the redirect from the keycloak AUTH endpoint (when the user enters their creds)
+   *
+   * When this
+   */
+  const tinyServer = http.createServer(async (req, res) => {
+    try {
+      let authResponse = new URL(req.url, "http://localhost");
+      let code = authResponse.searchParams.get("code");
+      let tokenParams = new URLSearchParams();
+      tokenParams.append("grant_type", "authorization_code");
+      tokenParams.append("code", code);
+      tokenParams.append("redirect_uri", `http://localhost:${tinyPort}`);
+      tokenParams.append("client_id", clientId);
+      tokenParams.append("client_secret", process.env.CLIENT_SECRET);
 
-  let authWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    backgroundColor: "#303030",
-    webPreferences: {
-      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-    },
-  });
+      let tokenResponse = await axios.post(keycloakServer + "/token", tokenParams);
 
-  let goHere = new URL(
-    "https://sso-keycloak.apps.ocp-ugw1-dev.ecs.us.lmco.com/realms/myrealm/protocol/openid-connect/auth"
-  );
-  goHere.searchParams.append("redirect_uri", "http://localhost:3456");
-  goHere.searchParams.append("client_id", "login-app");
-  goHere.searchParams.append("scope", "email");
-  goHere.searchParams.append("response_type", "code");
+      console.log(tokenResponse.data);
+      setToken(tokenResponse.data.access_token);
+      BrowserWindow.getAllWindows().forEach((window) => {
+        window.webContents.send("loginComplete");
+      });
 
-  authWindow.loadURL(goHere.href);
-  authWindow.show();
-
-  let cookies = authWindow.webContents.session.cookies;
-
-  cookies.on("changed", function (event, cookie, cause, removed) {
-    if (cookie.session && !removed) {
-      console.log(cookie);
-      // cookies.set(
-      //   {
-      //     url: url,
-      //     name: cookie.name,
-      //     value: cookie.value,
-      //     domain: cookie.domain,
-      //     path: cookie.path,
-      //     // secure: cookie.secure,
-      //     httpOnly: cookie.httpOnly,
-      //     expirationDate: new Date().setDate(new Date().getDate() + 14),
-      //   },
-      //   function (err) {
-      //     if (err) {
-      //       log.error("Error trying to persist cookie", err, cookie);
-      //     }
-      //   }
-      // );
+      res.writeHead(200, { "Content-Type": "text/plain" });
+      res.end("You're logged in! Close this window to continue!");
+    } catch (e) {
+      console.error(e);
+      res.writeHead(500, { "Content-Type": "text/plain" });
+      res.end("Eat Shit and Die! :D");
+    } finally {
+      tinyServer.close();
     }
   });
+
+  tinyServer.listen(tinyPort);
+  authWindow.loadURL(authHref);
+  authWindow.show();
 
   // Reset the authWindow on close
   authWindow.on(
     "close",
-    function () {
-      authWindow = null;
+    () => {
       tinyServer.close();
     },
     false

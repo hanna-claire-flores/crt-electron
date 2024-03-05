@@ -3,10 +3,13 @@ import { AppBar, Button, IconButton, Toolbar, Typography } from "@material-ui/co
 import LibraryAddIcon from "@material-ui/icons/LibraryAdd";
 
 import useCrtStore from "src/stores/useCrtStore.js";
+import { useNavigate } from "react-router-dom";
 
 const Topbar = () => {
   const topbarText = useCrtStore((s) => s.topbarText);
   const authStatus = useCrtStore((s) => s.authStatus);
+
+  const nav = useNavigate();
 
   const openNewWindow = () => {
     window.crtApi.openNewWindow();
@@ -14,6 +17,7 @@ const Topbar = () => {
 
   const login = () => {
     window.crtApi.openLoginWindow();
+    // nav("/login");
   };
 
   const logout = () => {
@@ -28,18 +32,18 @@ const Topbar = () => {
           <LibraryAddIcon />
         </IconButton>
         <div style={{ flexGrow: 1 }}></div>
-        {authStatus != "User Logged In" && (
+        {authStatus == null && (
           <Button variant="contained" onClick={login}>
             Login
           </Button>
         )}
 
-        {authStatus == "User Logged In" && (
+        {authStatus != null && (
           <Button variant="contained" onClick={logout}>
             Logout
           </Button>
         )}
-        <Typography>{authStatus.toString()}</Typography>
+        <Typography>{authStatus ? "Logged In" : "Unauthorised"}</Typography>
       </Toolbar>
     </AppBar>
   );
