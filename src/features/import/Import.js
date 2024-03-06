@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@material-ui/core";
 import useUserInfo from "src/features/import/hooks/useUserInfo.js";
+import useCrtStore from "src/stores/useCrtStore.js";
 // import Plotly from "plotly.js-dist";
 
 // const renderPlot = async (pRef, dRef, data) => {
@@ -9,8 +10,9 @@ import useUserInfo from "src/features/import/hooks/useUserInfo.js";
 
 const Import = () => {
   const [selFile, setSelFile] = React.useState("nothin");
+  const tokenData = useCrtStore((s) => s.tokenData);
 
-  const userInfo = useUserInfo();
+  const userInfo = useUserInfo(!!tokenData);
 
   React.useEffect(() => {
     console.log(userInfo);

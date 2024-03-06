@@ -16,7 +16,7 @@ contextBridge.exposeInMainWorld("crtApi", {
 
   openLoginWindow: () => ipcRenderer.send("openLoginWindow"),
   logout: () => ipcRenderer.send("logout"),
-  getAuthStatus: () => ipcRenderer.invoke("getAuthStatus"),
+  getTokenData: () => ipcRenderer.invoke("getTokenData"),
 
   /* -------------------------------------------------------------------------- */
   /*          events from the main thread to handle on the client side          */

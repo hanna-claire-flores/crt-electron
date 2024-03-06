@@ -4,11 +4,11 @@ const useCrtStore = create((set) => ({
   currentApp: "aor",
   topbarText: "CRT Electron",
   supersessions: {},
-  authStatus: "initial",
+  tokenData: null,
 
   setCurrentApp: (app) => set({ currentApp: app }),
   setTopbarText: (text) => set({ topbarText: text }),
-  setAuthStatus: (data) => set({ authStatus: data }),
+  setTokenData: (data) => set({ tokenData: data }),
 
   setToolSupersession: (toolTag, superData) =>
     set(({ supersessions: oldSupers }) => ({

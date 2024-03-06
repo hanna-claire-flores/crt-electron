@@ -1,35 +1,38 @@
-import { setToken } from "../dummyState.js";
 const { BrowserWindow } = require("electron");
 var http = require("http");
 import axios from "axios";
+import crypto from "crypto";
 
-const tinyPort = 3456;
-const keycloakServer = "https://sso-keycloak.apps.ocp-ugw1-dev.ecs.us.lmco.com/realms/myrealm/protocol/openid-connect";
-const clientId = "crt-electron";
+import { setToken } from "../dummyState.js";
+import {
+  keycloakServer,
+  tinyPort,
+  publicClient,
+  base64URLEncode,
+  sha256,
+  getAuthEndpoint,
+  getTokenParams,
+} from "./authHelpers.js";
 
-const authURL = new URL(keycloakServer + "/auth");
-authURL.searchParams.append("scope", "openid");
-authURL.searchParams.append("response_type", "code");
-authURL.searchParams.append("client_id", clientId);
-authURL.searchParams.append("redirect_uri", `http://localhost:${tinyPort}`);
-
-const authHref = authURL.href;
-
+/**
+ * This web server only lives while the login popup window is shown - it's here
+ * to catch the redirect from the keycloak AUTH endpoint (when the user enters their creds)
+ *
+ * When this receives a hit, its going to be from the keycloak server in the form
+ * /?session_state=______&code=_________ and we really just need that code
+ *
+ * Then we send the code (aka authorization_code) back to the keycloak server through the
+ * TOKEN endpoint, and the response from THAT contains our access_token, refresh_token, and
+ * id_token! These we will save and send to all our browser windows via IPC to be used for
+ * API calls
+ */
 const handleLogin = () => {
   let authWindow = new BrowserWindow();
 
-  /**
-   * This web server only lives while the login popup window is shown - it's here
-   * to catch the redirect from the keycloak AUTH endpoint (when the user enters their creds)
-   *
-   * When this receives a hit, its going to be from the keycloak server in the form
-   * /?session_state=______&code=_________ and we really just need that code
-   *
-   * Then we send the code (aka authorization_code) back to the keycloak server through the
-   * TOKEN endpoint, and the response from THAT contains our access_token, refresh_token, and
-   * id_token! These we will save and send to all our browser windows via IPC to be used for
-   * API calls
-   */
+  var verifier = base64URLEncode(crypto.randomBytes(32));
+  var challenge = base64URLEncode(sha256(verifier));
+  let authHref = getAuthEndpoint(publicClient, challenge, tinyPort);
+
   const tinyServer = http.createServer(async (req, res) => {
     try {
       // get the authorization_code from the redirect URL
@@ -37,19 +40,14 @@ const handleLogin = () => {
       let code = authResponse.searchParams.get("code");
 
       // create the /token POST request
-      let tokenParams = new URLSearchParams();
-      tokenParams.append("grant_type", "authorization_code");
-      tokenParams.append("code", code);
-      tokenParams.append("redirect_uri", `http://localhost:${tinyPort}`);
-      tokenParams.append("client_id", clientId);
-      tokenParams.append("client_secret", process.env.CLIENT_SECRET);
+      let tokenParams = getTokenParams(code, tinyPort, publicClient, verifier);
 
       // wait for the response
       let tokenResponse = await axios.post(keycloakServer + "/token", tokenParams);
       console.log(tokenResponse.data);
 
       // set token state
-      setToken(tokenResponse.data.access_token);
+      setToken(tokenResponse.data);
 
       // notify all browser windows that they should check for the updated bearer token
       BrowserWindow.getAllWindows().forEach((window) => {
